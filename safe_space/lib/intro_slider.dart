@@ -7,6 +7,8 @@ import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 
+import 'home.dart';
+
 class IntroSliderPage extends StatefulWidget {
   @override
   _IntroSliderPageState createState() => _IntroSliderPageState();
@@ -99,29 +101,30 @@ class _IntroSliderPageState extends State<IntroSliderPage> {
   @override
   Widget build(BuildContext context) {
     return IntroSlider(
-      backgroundColorAllSlides: Colors.white,
-      renderSkipBtn: Text("Skip", style: TextStyle(color: Colors.green[700])),
-      renderNextBtn: Text(
-        "Next",
-        style: TextStyle(color: Colors.green[700]),
-      ),
-      renderDoneBtn: Text(
-        "Done", style: TextStyle(color: Colors.green[700]),
-        //     onPressed: () {
-        //   Timer(Duration(seconds: 3), () {
-        //     Navigator.of(context)
-        //         .pushReplacement(MaterialPageRoute(builder: (_) => Homepage()));
-        //   });
-        // }
-      ),
-      colorDoneBtn: Colors.green,
-      colorActiveDot: Colors.green,
-      sizeDot: 8.0,
-      typeDotAnimation: dotSliderAnimation.SIZE_TRANSITION,
-      listCustomTabs: this.renderListCustomTabs(),
-      scrollPhysics: BouncingScrollPhysics(),
-      hideStatusBar: false,
-      //: false,
-    );
+        backgroundColorAllSlides: Colors.white,
+        renderSkipBtn: Text("Skip", style: TextStyle(color: Colors.green[700])),
+        renderNextBtn: Text(
+          "Next",
+          style: TextStyle(color: Colors.green[700]),
+        ),
+        renderDoneBtn: Text(
+          "Done",
+          style: TextStyle(color: Colors.green[700]),
+        ),
+        colorDoneBtn: Colors.green,
+        colorActiveDot: Colors.green,
+        sizeDot: 8.0,
+        typeDotAnimation: dotSliderAnimation.SIZE_TRANSITION,
+        listCustomTabs: this.renderListCustomTabs(),
+        scrollPhysics: BouncingScrollPhysics(),
+        hideStatusBar: false,
+        onDonePress: () {
+          Timer(Duration(seconds: 3), () {
+            Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(builder: (_) => Homepage()));
+          });
+        }
+        //: false,
+        );
   }
 }
