@@ -88,7 +88,8 @@ class BluetoothDeviceListEntry extends ListTile {
 
   static double CalculateDistance(int rssi) {
     double distance;
-    distance = pow(10, -(rssi + 69) / (10 * 4.7));
+    //distance = pow(10, -(rssi + 69) / (10 * 4.7));
+    distance = pow(20, (rssi + 69));
     return distance;
   }
 }
