@@ -1,30 +1,32 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:safe_space/screens/home.dart';
 
-import 'signin.dart';
+class SignIn extends StatelessWidget {
+  //controllers for managing user credentials
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
 
-class SignUp extends StatelessWidget {
-  TextEditingController _email = new TextEditingController();
-  TextEditingController _password = new TextEditingController();
-  TextEditingController _username = new TextEditingController();
-
-  Future<void> signup(BuildContext context) async {
+  //manage user signin using firebase authentication
+  Future<void> signin(BuildContext context) async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _email.text,
-        password: _password.text,
-      );
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _email.text, password: _password.text);
     } catch (e) {
       print(e);
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
+    //If signin successful
+    print("Sign In successful");
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Homepage()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        //allows scrolling of page
         child: Container(
           alignment: Alignment.topCenter,
           margin: EdgeInsets.all(30),
@@ -32,7 +34,7 @@ class SignUp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Sign Up",
+                "Sign In",
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 30,
@@ -41,20 +43,6 @@ class SignUp extends StatelessWidget {
               ),
               SizedBox(
                 height: 120,
-              ),
-              Container(
-                margin: EdgeInsets.all(10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.person),
-                      labelText: "Enter Username:",
-                      hintText: "Username"),
-                  controller: _username,
-                ),
-                // decoration: BoxDecoration(
-                //   color: Colors.lightBlue,
-                //   borderRadius: BorderRadius.circular(10),
-                // ),
               ),
               Container(
                 margin: EdgeInsets.all(10),
@@ -89,23 +77,9 @@ class SignUp extends StatelessWidget {
                 margin: EdgeInsets.all(10),
                 width: 150,
                 child: FlatButton(
-                  child: Text("Sign Up"),
-                  onPressed: () {
-                    signup(context);
-                  },
-                ),
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(0, 219, 144, 1.0),
-                    borderRadius: BorderRadius.circular(20)),
-              ),
-              Container(
-                margin: EdgeInsets.all(10),
-                width: 150,
-                child: FlatButton(
                   child: Text("Sign In"),
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => SignIn()));
+                    signin(context);
                   },
                 ),
                 decoration: BoxDecoration(
