@@ -1,22 +1,26 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:safe_space/home.dart';
 
-class SignIn extends StatelessWidget {
-  TextEditingController _email = TextEditingController();
-  TextEditingController _password = TextEditingController();
+import 'signin.dart';
 
-  Future<void> signin(BuildContext context) async {
+class SignUp extends StatelessWidget {
+  // Controllers for managing user signup
+  TextEditingController _email = new TextEditingController();
+  TextEditingController _password = new TextEditingController();
+  TextEditingController _username = new TextEditingController();
+
+  //Manage user sign up with firebase authentication
+  Future<void> signup(BuildContext context) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: _email.text, password: _password.text);
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _email.text,
+        password: _password.text,
+      );
     } catch (e) {
       print(e);
     }
-    print("Sign In successful");
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Homepage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
   }
 
   @override
@@ -30,7 +34,7 @@ class SignIn extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Sign In",
+                "Sign Up",
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 30,
@@ -39,6 +43,20 @@ class SignIn extends StatelessWidget {
               ),
               SizedBox(
                 height: 120,
+              ),
+              Container(
+                margin: EdgeInsets.all(10),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      icon: Icon(Icons.person),
+                      labelText: "Enter Username:",
+                      hintText: "Username"),
+                  controller: _username,
+                ),
+                // decoration: BoxDecoration(
+                //   color: Colors.lightBlue,
+                //   borderRadius: BorderRadius.circular(10),
+                // ),
               ),
               Container(
                 margin: EdgeInsets.all(10),
@@ -73,14 +91,31 @@ class SignIn extends StatelessWidget {
                 margin: EdgeInsets.all(10),
                 width: 150,
                 child: FlatButton(
-                  child: Text("Sign In"),
+                  child: Text("Sign Up"),
                   onPressed: () {
-                    signin(context);
+                    signup(context);
                   },
                 ),
                 decoration: BoxDecoration(
                     color: Color.fromRGBO(0, 219, 144, 1.0),
                     borderRadius: BorderRadius.circular(20)),
+              ),
+              Container(
+                margin: EdgeInsets.all(10),
+                width: 150,
+                child: FlatButton(
+                  child: Text(
+                    "Sign In",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => SignIn()));
+                  },
+                ),
+                // decoration: BoxDecoration(
+                //     color: Color.fromRGBO(0, 219, 144, 1.0),
+                //     borderRadius: BorderRadius.circular(20)),
               ),
             ],
           ),
