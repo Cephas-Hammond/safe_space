@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
+import 'package:safe_space/models/auth_service.dart';
 import 'package:safe_space/screens/signup.dart';
 
 import 'home.dart';
@@ -71,7 +72,7 @@ class _IntroSliderPageState extends State<IntroSliderPage> {
         onDonePress: () {
           Timer(Duration(seconds: 2), () {
             Navigator.of(context)
-                .pushReplacement(MaterialPageRoute(builder: (_) => SignUp()));
+                .pushReplacementNamed('signup');
           });
         });
   }
