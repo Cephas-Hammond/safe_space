@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-import 'signin.dart';
 
+
+// ignore: must_be_immutable
 class SignUp extends StatelessWidget {
   // Controllers for managing user signup
   TextEditingController _email = new TextEditingController();
@@ -16,16 +18,23 @@ class SignUp extends StatelessWidget {
   //Manage user sign up with firebase authentication
   Future<void> signup(BuildContext context) async {
     try {
+      // ignore: unused_local_variable
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _email.text,
         password: _password.text,
       );
-    } catch (e) {
+
+      Navigator.of(context).pushReplacementNamed('\signin');
+    } on FirebaseAuthException catch (e) {
       print(e);
-      errormsg = e;
+      errormsg = e.message;
+      Fluttertoast.showToast(
+          msg: errormsg,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.redAccent);
     }
-    Navigator.of(context).pushReplacementNamed('signin');
+    
   }
 
   @override
@@ -115,7 +124,7 @@ class SignUp extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.all(10),
                   width: 150,
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text("Sign Up"),
                     onPressed: () {
                       if (submitKey.currentState.validate()) {
@@ -144,13 +153,13 @@ class SignUp extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.all(2),
                   width: 100,
-                  child: FlatButton(
+                  child: TextButton(
                     child: Text(
                       "Sign In",
                       style: TextStyle(color: Colors.blue),
                     ),
-                    focusColor: Theme.of(context).accentColor,
-                    splashColor: Theme.of(context).accentColor,
+                    // focusNode: Theme.of(context).accentColor,
+                    // splashColor: Theme.of(context).accentColor,
                     onPressed: () {
                       Navigator.of(context).pushReplacementNamed('signin');
                     },

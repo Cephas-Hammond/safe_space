@@ -1,5 +1,5 @@
 // ignore: non_constant_identifier_names
-import 'dart:async';
+
 
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 

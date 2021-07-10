@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+// ignore: must_be_immutable
 class SignIn extends StatelessWidget {
+  String _error;
+
   //controllers for managing user credentials
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
@@ -11,15 +14,23 @@ class SignIn extends StatelessWidget {
   //manage user signin using firebase authentication
   Future<void> signin(BuildContext context) async {
     try {
+      // ignore: unused_local_variable
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
               email: _email.text, password: _password.text);
-    } catch (e) {
+      print("Sign In successful");
+    Navigator.of(context).pushReplacementNamed('\home');
+    
+    } on FirebaseAuthException catch (e) {
       print(e);
+      _error = e.message;
+      Fluttertoast.showToast(
+          msg: _error,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.redAccent);
     }
     //If signin successful
-    print("Sign In successful");
-    Navigator.of(context).pushReplacementNamed('home');
+    
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -56,9 +67,13 @@ class SignIn extends StatelessWidget {
                   child: TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (!value.contains('@') || value.isEmpty) {
+                      if (!value.isEmpty) {
+                        return "Email can't be empty";
+                      }
+                      if (!value.contains('@')) {
                         return 'Please enter a correct email';
                       }
+
                       return null;
                     },
                     decoration: InputDecoration(
@@ -131,7 +146,7 @@ class SignIn extends StatelessWidget {
                     focusColor: Theme.of(context).accentColor,
                     splashColor: Theme.of(context).accentColor,
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('signup');
+                      Navigator.of(context).pushReplacementNamed('\signup');
                     },
                   ),
                 ),

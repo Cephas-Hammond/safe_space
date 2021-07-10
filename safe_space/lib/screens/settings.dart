@@ -1,23 +1,25 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:safe_space/models/bluetooth.dart';
-import 'package:safe_space/models/controller_variables.dart';
 
-class Settings extends StatefulWidget {
+
+class MainPage extends StatefulWidget {
   @override
-  _SettingsState createState() => _SettingsState();
+  _MainPage createState() => new _MainPage();
 }
 
-class _SettingsState extends State<Settings> {
-  BluetoothState _bluetoothState = bluetoothState;
+class _MainPage extends State<MainPage> {
+  BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
 
   String _address = "...";
   String _name = "...";
+  // int counter = 0;
 
   Timer _discoverableTimeoutTimer;
-  int _discoverableTimeoutSecondsLeft = 10;
+  int _discoverableTimeoutSecondsLeft = 0;
+
+  //BackgroundCollectingTask _collectingTask;
 
   bool _autoAcceptPairingRequests = false;
 
@@ -71,7 +73,7 @@ class _SettingsState extends State<Settings> {
   @override
   void dispose() {
     FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
-
+    //_collectingTask?.dispose();
     _discoverableTimeoutTimer?.cancel();
     super.dispose();
   }
@@ -79,151 +81,114 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Safe Space'),
+        backgroundColor: Colors.orange,
+      ),
       body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: Colors.white70,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black26,
-                  offset: Offset(0.0, 2.0),
-                  blurRadius: 6.0)
-            ]),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(25.0),
-          child: ListView(
-            children: <Widget>[
-              SizedBox(
-                height: 30,
-              ),
-              Card(
-                color: Theme.of(context).primaryColor,
-                margin: EdgeInsets.all(15),
-                elevation: 25,
-                child: Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).primaryColor,
+        child: ListView(
+          children: <Widget>[
+            //Divider(),
+            Card(
+              child: ListTile(
+                  leading: Icon(
+                    Icons.category_outlined,
+                    color: Colors.orangeAccent,
+                    size: 50,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                        leading: Icon(
-                          Icons.category_outlined,
-                          color: Colors.white,
-                          size: 50,
-                        ),
-                        title: const Text(
-                          'General',
-                          style: TextStyle(color: Colors.white),
-                        )),
-                  ),
-                ),
-              ),
-              Card(
-                color: Theme.of(context).primaryColor,
-                margin: EdgeInsets.all(15),
-                elevation: 25,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  height: 100,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SwitchListTile(
-                      title: const Text(
-                        'Enable Bluetooth',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      value: _bluetoothState.isEnabled,
-                      onChanged: (bool value) {
-                        // Do the request and update with the true value then
-                        future() async {
-                          // async lambda seems to not working
-                          if (value)
-                            await FlutterBluetoothSerial.instance
-                                .requestEnable();
-                          else
-                            await FlutterBluetoothSerial.instance
-                                .requestDisable();
-                        }
+                  title: const Text('General')),
+            ),
+            Card(
+              child: SwitchListTile(
+                title: const Text('Enable Bluetooth'),
+                value: _bluetoothState.isEnabled,
+                onChanged: (bool value) {
+                  // Do the request and update with the true value then
+                  future() async {
+                    // async lambda seems to not working
+                    if (value)
+                      await FlutterBluetoothSerial.instance.requestEnable();
+                    else
+                      await FlutterBluetoothSerial.instance.requestDisable();
+                  }
 
-                        future().then((_) {
-                          setState(() {});
-                        });
-                      },
-                      secondary: Icon(
-                        Icons.bluetooth_searching,
-                        color: Colors.white,
-                        size: 50,
-                      ),
-                    ),
-                  ),
+                  future().then((_) {
+                    setState(() {});
+                  });
+                },
+                secondary: Icon(
+                  Icons.bluetooth_searching,
+                  color: Colors.orangeAccent,
+                  size: 50,
                 ),
               ),
-              Card(
-                color: Theme.of(context).primaryColor,
-                margin: EdgeInsets.all(15),
-                elevation: 25,
-                child: Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.settings_bluetooth,
-                        color: Colors.white,
-                        size: 50,
-                      ),
-                      title: const Text(
-                        'Bluetooth status',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      //subtitle: Text(_bluetoothState.toString()),
-                      trailing: RaisedButton(
-                        child: const Text('Settings'),
-                        onPressed: () {
-                          FlutterBluetoothSerial.instance.openSettings();
-                        },
-                      ),
-                    ),
-                  ),
+            ),
+            Card(
+              child: ListTile(
+                leading: Icon(
+                  Icons.settings_bluetooth,
+                  color: Theme.of(context).primaryColor,
+                  size: 50,
+                ),
+                title: const Text('Bluetooth status'),
+                subtitle: Text(_bluetoothState.toString()),
+                trailing: ElevatedButton(
+                  child: const Text('Settings'),
+                  onPressed: () {
+                    FlutterBluetoothSerial.instance.openSettings();
+                  },
                 ),
               ),
-              Card(
-                margin: EdgeInsets.all(50),
-                child: ListTile(
-                  // leading: Icon(
-                  //     Icons.find_in_page,
-                  //     color: Colors.orangeAccent,
-                  //     size: 50,
-                  //     ),
-                  title: RaisedButton(
-                      child: const Text('Discover Devices'),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Discover();
-                            },
-                          ),
-                        );
-                      }),
-                ),
+            ),
+
+            Card(
+              margin: EdgeInsets.only(top: 150),
+              child: ListTile(
+                // leading: Icon(
+                //     Icons.find_in_page,
+                //     color: Colors.orangeAccent,
+                //     size: 50,
+                //     ),
+                title: ElevatedButton(
+                    child: const Text('Discover Devices'),
+                    onPressed: () async {
+                      final BluetoothDevice selectedDevice =
+                          await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DiscoveryPage();
+                          },
+                        ),
+                      );
+
+                      if (selectedDevice != null) {
+                        print(
+                            'Discovery -> selected ' + selectedDevice.address);
+                      } else {
+                        print('Discovery -> no device selected');
+                      }
+                    }),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+}
+
+class Settings extends StatefulWidget {
+  // const Settings({ Key? key }) : super(key: key);
+
+  @override
+  _SettingsState createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
     );
   }
 }

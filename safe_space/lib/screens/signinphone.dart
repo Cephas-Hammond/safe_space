@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                   )) : Container(),
               Padding(
                   padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: RaisedButton(
+                  child: ElevatedButton(
                       child: Center(child: codeSent ? Text('Login'):Text('Verify')),
                       onPressed: () {
                         codeSent ? AuthService().signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);

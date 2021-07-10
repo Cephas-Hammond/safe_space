@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:safe_space/models/bluetooth_provider.dart';
+import 'package:safe_space/models/distance_estimator.dart';
 
 class Devices extends StatefulWidget {
   @override
@@ -6,14 +9,13 @@ class Devices extends StatefulWidget {
 }
 
 class _DevicesState extends State<Devices> {
-  int devices = 12;
-  Color updateColor() {
-    if (devices > 4 && devices < 8) {
+  Color updateColor(int devices) {
+    if (devices > 2 && devices < 4) {
       return Colors.yellow;
-    } else if (devices > 8) {
+    } else if (devices >= 4) {
       return Colors.red;
     } else {
-      return Theme.of(context).primaryColor;
+      return Color.fromRGBO(0, 219, 144, 1.0);
     }
   }
 
@@ -25,7 +27,8 @@ class _DevicesState extends State<Devices> {
       margin: EdgeInsets.all(5.0),
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-          color: updateColor(), borderRadius: BorderRadius.circular(10)),
+          color: updateColor(context.watch<Bluetooth>().devicenum),
+          borderRadius: BorderRadius.circular(10)),
       child: Stack(children: [
         Text(
           'Detected devices around you',
@@ -36,7 +39,7 @@ class _DevicesState extends State<Devices> {
             right: 10,
             bottom: 10,
             child: Text(
-              '$devices',
+              '${context.watch<Bluetooth>().devicenum}',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 25,
@@ -47,20 +50,15 @@ class _DevicesState extends State<Devices> {
   }
 }
 
-class DistanceInfo extends StatefulWidget {
-  @override
-  _DistanceInfoState createState() => _DistanceInfoState();
-}
-
-class _DistanceInfoState extends State<DistanceInfo> {
-  double distance = 0.1;
-  Color updateColor() {
-    if (distance < 1 && distance >= 0.3) {
+class DistanceInfo extends StatelessWidget {
+  double distance = 1.0;
+  Color updateColor(double distance) {
+    if (distance < 1.0 && distance >= 0.3) {
       return Colors.yellow;
     } else if (distance < 0.3) {
       return Colors.red;
     } else {
-      return Theme.of(context).primaryColor;
+      return Color.fromRGBO(0, 219, 144, 1.0);
     }
   }
 
@@ -72,7 +70,9 @@ class _DistanceInfoState extends State<DistanceInfo> {
       margin: EdgeInsets.all(5.0),
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-          color: updateColor(), borderRadius: BorderRadius.circular(10)),
+          color: updateColor(
+              double.parse(context.watch<DistanceEstimator>().distancecal)),
+          borderRadius: BorderRadius.circular(10)),
       child: Stack(children: [
         Text(
           'Distance from nearest device',
@@ -80,15 +80,20 @@ class _DistanceInfoState extends State<DistanceInfo> {
               color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
         ),
         Positioned(
-            right: 10,
-            bottom: 10,
-            child: Text(
-              '${distance}m',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-              ),
-            )),
+          right: 10,
+          bottom: 10,
+          child: DistanceEstimator().distancecal == null
+              ? Text('${context.watch<DistanceEstimator>().distancecal}' + 'm',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                  ))
+              : Text('Not available',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  )),
+        ),
       ]),
     );
   }
@@ -100,14 +105,60 @@ class RiskIndicator extends StatefulWidget {
 }
 
 class _RiskIndicatorState extends State<RiskIndicator> {
-  int risk = 93;
-  Color updateColor() {
-    if (risk > 10 && risk < 50) {
-      return Colors.yellow;
-    } else if (risk >= 50) {
-      return Colors.red;
-    } else {
-      return Theme.of(context).primaryColor;
+  String risk;
+  int riskIndicator = 0;
+  Color updateColor(int devices, double distance) {
+    if (devices < 2 && distance > 1) {
+      risk = "LOWLOW";
+      riskIndicator = 0;
+    }
+    if (devices < 2 && distance > 1) {
+      risk = "LOWHIGH";
+      riskIndicator = 10;
+    }
+    if (devices >= 2 && distance < 1 && distance > 0.5) {
+      risk = "MEDIUMLOW";
+      riskIndicator = 20;
+    }
+    if (devices >= 2 && distance < 1 && distance > 0.5) {
+      risk = "MEDIUMHIGH";
+      riskIndicator = 40;
+    }
+    if (devices == 0) {
+      risk = "LOWLOW";
+      riskIndicator = 0;
+    }
+
+    if (devices >= 5 && distance <= 0.5) {
+      risk = "HIGHLOW";
+      riskIndicator = 70;
+    }
+    if (devices >= 5 && distance <= 0.5) {
+      risk = "HIGHHIGH";
+      riskIndicator = 90;
+    }
+
+    switch (risk) {
+      case "LOWLOW":
+        return Color.fromRGBO(0, 219, 144, 1.0);
+        break;
+      case "LOWHIGH":
+        return Colors.yellow[400];
+        break;
+      case "MEDIUMLOW":
+        return Colors.yellow;
+        break;
+      case "MEDIUMHIGH":
+        return Colors.yellow[600];
+        break;
+      case "HIGHLOW":
+        return Colors.red;
+        break;
+      case "HIGHHIGH":
+        return Colors.red[900];
+        break;
+      default:
+        return Color.fromRGBO(0, 219, 144, 1.0);
     }
   }
 
@@ -119,7 +170,9 @@ class _RiskIndicatorState extends State<RiskIndicator> {
       margin: EdgeInsets.all(5.0),
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-          color: updateColor(), borderRadius: BorderRadius.circular(10)),
+          color: updateColor(context.watch<Bluetooth>().devicenum,
+              double.parse(context.watch<DistanceEstimator>().distancecal)),
+          borderRadius: BorderRadius.circular(10)),
       child: Stack(children: [
         Text(
           'Risk of infection',
@@ -130,7 +183,7 @@ class _RiskIndicatorState extends State<RiskIndicator> {
             right: 10,
             bottom: 10,
             child: Text(
-              '$risk%',
+              '$riskIndicator%',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 25,
@@ -150,7 +203,7 @@ class _MaskIndicatorState extends State<MaskIndicator> {
   String maskon = 'Yes';
   Color updateColor() {
     if (maskon.toLowerCase() == 'no') return Colors.red;
-    if (maskon.toLowerCase() == 'yes') return Theme.of(context).primaryColor;
+    if (maskon.toLowerCase() == 'yes') return Color.fromRGBO(0, 219, 144, 1.0);
   }
 
   swap() {
