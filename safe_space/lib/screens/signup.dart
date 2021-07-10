@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
-
 // ignore: must_be_immutable
 class SignUp extends StatelessWidget {
   // Controllers for managing user signup
@@ -32,9 +30,9 @@ class SignUp extends StatelessWidget {
       Fluttertoast.showToast(
           msg: errormsg,
           gravity: ToastGravity.TOP,
-          backgroundColor: Colors.redAccent);
+          backgroundColor: Colors.redAccent,
+          toastLength: Toast.LENGTH_SHORT);
     }
-    
   }
 
   @override
@@ -57,7 +55,7 @@ class SignUp extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 30,
-                    fontWeight: FontWeight.w200,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 SizedBox(
@@ -107,7 +105,7 @@ class SignUp extends StatelessWidget {
                   child: TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please check this field again';
+                        return 'Password can\'t be empty';
                       }
                       return null;
                     },
@@ -143,7 +141,7 @@ class SignUp extends StatelessWidget {
                         ));
                       }
 
-                      //signup(context);
+                      signup(context);
                     },
                   ),
                   decoration: BoxDecoration(
