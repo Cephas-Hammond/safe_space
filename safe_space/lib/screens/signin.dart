@@ -14,6 +14,7 @@ class SignIn extends StatelessWidget {
   //manage user signin using firebase authentication
   Future<void> signin(BuildContext context) async {
     try {
+      await FirebaseAuth.instance.signOut();
       // ignore: unused_local_variable
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
@@ -56,7 +57,7 @@ class SignIn extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 30,
-                    fontWeight: FontWeight.w200,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 SizedBox(

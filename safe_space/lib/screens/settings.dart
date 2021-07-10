@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:safe_space/models/bluetooth.dart';
 
-
 class MainPage extends StatefulWidget {
   @override
   _MainPage createState() => new _MainPage();
@@ -82,8 +81,11 @@ class _MainPage extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Safe Space'),
-        backgroundColor: Colors.orange,
+        title: const Text(
+          'Safe Space',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Container(
         child: ListView(
@@ -93,7 +95,7 @@ class _MainPage extends State<MainPage> {
               child: ListTile(
                   leading: Icon(
                     Icons.category_outlined,
-                    color: Colors.orangeAccent,
+                    color: Theme.of(context).primaryColor,
                     size: 50,
                   ),
                   title: const Text('General')),
@@ -118,7 +120,7 @@ class _MainPage extends State<MainPage> {
                 },
                 secondary: Icon(
                   Icons.bluetooth_searching,
-                  color: Colors.orangeAccent,
+                  color: Theme.of(context).primaryColor,
                   size: 50,
                 ),
               ),
@@ -185,10 +187,175 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  double _val = 50.0;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 40.0,
+          ),
+          Text(
+            "Settings",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 30.0,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(
+            height: 50.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+                "Customize Notification like" +
+                    " Vibration intensity, social distance, etc.",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w400,
+                )),
+          ),
+          SizedBox(
+            height: 50.0,
+          ),
+          Container(
+            child: Column(
+              children: [
+                Text("Vibration Intensity",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    )),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20.0, top: 20.0, bottom: 20.0, right: 5.0),
+                      child: Icon(
+                        Icons.vibration,
+                        color: Theme.of(context).primaryColor,
+                        size: 35.0,
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 20.0),
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              '${_val.toInt()}%',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                          Slider(
+                            label: "Increase vibration intensity",
+                            activeColor: Theme.of(context).primaryColor,
+                            inactiveColor: Colors.grey,
+                            value: _val,
+                            onChanged: (double val) {
+                              setState(() {
+                                _val = val;
+                              });
+                            },
+                            divisions: 2,
+                            max: 100.0,
+                            min: 1.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            margin: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text("Minimum Social Distance",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      )),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "1 meter",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w300,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            margin: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text("Select Sound",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      )),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Default Sound",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w300,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Color.fromRGBO(0, 219, 144, 1.0),
         accentColor: Color.fromRGBO(220, 247, 220, 1),
         scaffoldBackgroundColor: Color(0xFFF3F5F7),
+        focusColor: Color.fromRGBO(0, 219, 144, 1.0),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: initScreen == 0 || initScreen == null ? '/' : '\signup',

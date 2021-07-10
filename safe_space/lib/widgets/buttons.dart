@@ -30,7 +30,7 @@ class _SoundToggle extends State<SoundToggle> {
     return GestureDetector(
       onTap: _handleTap,
       child: Padding(
-        padding: const EdgeInsets.only(right: 8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Container(
           padding: EdgeInsets.all(8.0),
           height: 120,
@@ -100,7 +100,7 @@ class _VibrationToggle extends State<VibrationToggle> {
     return GestureDetector(
       onTap: _handleVibrateTap,
       child: Padding(
-        padding: const EdgeInsets.only(right: 8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Container(
           padding: EdgeInsets.all(8.0),
           height: 120,
@@ -160,7 +160,7 @@ class _AnimationToggle extends State<AnimationToggle> {
     return GestureDetector(
       onTap: _handleAnimateTap,
       child: Padding(
-        padding: const EdgeInsets.only(right: 8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Container(
           padding: EdgeInsets.all(8.0),
           height: 120,

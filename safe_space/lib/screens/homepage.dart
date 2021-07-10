@@ -18,9 +18,7 @@ class HomePage extends StatelessWidget {
           Text(
             'Hello, John',
             style: TextStyle(
-                color: Colors.black54,
-                fontSize: 25,
-                fontWeight: FontWeight.w600),
+                color: Colors.grey, fontSize: 25, fontWeight: FontWeight.w600),
           ),
           SizedBox(
             height: 5,
@@ -61,8 +59,7 @@ class HomePage extends StatelessWidget {
             alignment: Alignment.bottomLeft,
             child: Text(
               "Customize notifications",
-              style:
-                  TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
           ),
@@ -70,7 +67,7 @@ class HomePage extends StatelessWidget {
             height: 10,
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
