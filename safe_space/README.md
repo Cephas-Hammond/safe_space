@@ -1,16 +1,11 @@
 # safe_space
 
-A new Flutter project.
+A mobile app created using flutter for determining proximity between a user device and surrounding devices using Bluetooth.
 
-## Getting Started
+## How it works
 
-This project is a starting point for a Flutter application.
+Immediately the app launches it starts scanning for nearby Bluetooth devices. The app works on Bluetooth and will therefore not perform its function if the Bluetooth is not activated on the user's device.
 
-A few resources to get you started if this is your first Flutter project:
+Users have the ability to select the type of notification they prefer. 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
